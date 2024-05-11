@@ -21,8 +21,11 @@
   },
   "dependencies": {
     "@aws-cdk/aws-s3": "^1.204.0",
+    "@types/uuid": "^9.0.8",
     "aws-cdk-lib": "2.141.0",
+    "aws-sdk": "^2.1618.0",
     "constructs": "^10.0.0",
-    "source-map-support": "^0.5.21"
+    "source-map-support": "^0.5.21",
+    "uuid": "^9.0.1"
   }
 }
