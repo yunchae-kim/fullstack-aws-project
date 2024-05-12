@@ -95,7 +95,7 @@ This project isn't meant for any practical use and is more of a personal project
 1. Clone the repository:
 
    ```
-   git clone https://github.com/yunchae-kim/React-DynamoDB-Project.git
+   git clone https://github.com/yunchae-kim/Fullstack-AWS-Project.git
    ```
 
 2. Navigate to the frontend directory:
