@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 
 const apiClient = axios.create({
-  baseURL: 'https://nmoj4ij1e2.execute-api.us-east-1.amazonaws.com/prod/',
+  baseURL: '',
 });
 
 function UploadForm() {
