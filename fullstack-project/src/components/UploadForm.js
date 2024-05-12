@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
+const apiClient = axios.create({
+  baseURL: 'https://nmoj4ij1e2.execute-api.us-east-1.amazonaws.com/prod/',
+});
+
 function UploadForm() {
   // States for text input and file input
   const [inputText, setInputText] = useState('');
@@ -21,26 +25,18 @@ function UploadForm() {
 
     try {
       // Upload the file to S3
-      const uploadResponse = await axios.put(
-        `https://your-api-gateway-url.com/file/${inputFile.name}`,
-        inputFile,
-        {
-          headers: {
-            'Content-Type': inputFile.type,
-          },
-        },
-      );
+      const uploadResponse = await apiClient.put('file', {
+        fileName: inputFile.name,
+        fileContent: inputFile,
+      });
 
       const fileUrl = uploadResponse.data.url;
 
       // Save the input text and file path to DynamoDB
-      await axios.post(
-        'https://3mhzd7xn5d.execute-api.us-east-1.amazonaws.com/prod/',
-        {
-          input_text: inputText,
-          input_file_path: fileUrl,
-        },
-      );
+      await apiClient.post('file', {
+        input_text: inputText,
+        input_file_path: fileUrl,
+      });
 
       alert('File uploaded and data saved successfully.');
     } catch (error) {

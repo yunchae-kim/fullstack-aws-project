@@ -16,6 +16,7 @@ interface LambdaStackProps extends StackProps {
 export class LambdaStack extends Stack {
   public readonly saveToDynamoDBLambda: lambda.Function;
   public readonly handleDynamoDBEventLambda: lambda.Function;
+  public readonly uploadFileToS3Lambda: lambda.Function;
 
   constructor(scope: Construct, id: string, props: LambdaStackProps) {
     super(scope, id, props);
@@ -76,5 +77,20 @@ export class LambdaStack extends Stack {
         resources: [instanceArn],
       }),
     );
+
+    this.uploadFileToS3Lambda = new lambda.Function(
+      this,
+      'UploadFileToS3Lambda',
+      {
+        runtime: lambda.Runtime.NODEJS_16_X,
+        handler: 'uploadFileToS3.handler',
+        code: lambda.Code.fromAsset(path.join(__dirname, 'lambda')),
+        environment: {
+          BUCKET_NAME: bucket.bucketName,
+        },
+      },
+    );
+
+    bucket.grantWrite(this.uploadFileToS3Lambda);
   }
 }

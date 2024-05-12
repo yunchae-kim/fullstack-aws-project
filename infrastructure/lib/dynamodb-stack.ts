@@ -1,8 +1,8 @@
 import {
   Stack,
   StackProps,
-  aws_dynamodb as dynamodb,
   RemovalPolicy,
+  aws_dynamodb as dynamodb,
 } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 
@@ -15,6 +15,8 @@ export class DynamoDBStack extends Stack {
     this.fileTable = new dynamodb.Table(this, 'FileTable', {
       partitionKey: { name: 'id', type: dynamodb.AttributeType.STRING },
       billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
+      removalPolicy: RemovalPolicy.DESTROY,
+      stream: dynamodb.StreamViewType.NEW_AND_OLD_IMAGES, // Enable DynamoDB Streams
     });
 
     this.fileTable.addGlobalSecondaryIndex({
@@ -32,7 +34,5 @@ export class DynamoDBStack extends Stack {
         type: dynamodb.AttributeType.STRING,
       },
     });
-
-    this.fileTable.applyRemovalPolicy(RemovalPolicy.DESTROY);
   }
 }

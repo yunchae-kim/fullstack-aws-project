@@ -17,4 +17,5 @@ const lambdaStack = new LambdaStack(app, 'LambdaStack', {
 });
 new ApiGatewayStack(app, 'ApiGatewayStack', {
   saveToDynamoDBLambda: lambdaStack.saveToDynamoDBLambda,
+  uploadFileToS3Lambda: lambdaStack.uploadFileToS3Lambda,
 });
