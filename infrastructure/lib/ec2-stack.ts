@@ -1,5 +1,7 @@
-import { Stack, StackProps, aws_ec2 as ec2 } from 'aws-cdk-lib';
+import { Stack, StackProps, aws_ec2 as ec2, aws_iam as iam } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
+import * as fs from 'fs';
+import * as path from 'path';
 
 export class EC2Stack extends Stack {
   public readonly ec2Instance: ec2.Instance;
@@ -28,6 +30,14 @@ export class EC2Stack extends Stack {
       },
     );
 
+    const processFileScript = fs.readFileSync(
+      path.join(__dirname, '..', 'scripts', 'process_file.sh'),
+      'utf8',
+    );
+
+    const userData = ec2.UserData.forLinux();
+    userData.addCommands(processFileScript);
+
     this.ec2Instance = new ec2.Instance(this, 'FileProcessingInstance', {
       vpc,
       vpcSubnets: {
@@ -41,6 +51,16 @@ export class EC2Stack extends Stack {
         generation: ec2.AmazonLinuxGeneration.AMAZON_LINUX_2,
       }),
       securityGroup,
+      userData,
+      role: new iam.Role(this, 'FileProcessingInstanceRole', {
+        assumedBy: new iam.ServicePrincipal('ec2.amazonaws.com'),
+        managedPolicies: [
+          iam.ManagedPolicy.fromAwsManagedPolicyName('AmazonS3FullAccess'),
+          iam.ManagedPolicy.fromAwsManagedPolicyName(
+            'AmazonDynamoDBFullAccess',
+          ),
+        ],
+      }),
     });
   }
 }
