@@ -2,6 +2,8 @@ import { Stack, StackProps, aws_ec2 as ec2 } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 
 export class EC2Stack extends Stack {
+  public readonly ec2Instance: ec2.Instance;
+
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
@@ -26,7 +28,7 @@ export class EC2Stack extends Stack {
       },
     );
 
-    const ec2Instance = new ec2.Instance(this, 'FileProcessingInstance', {
+    this.ec2Instance = new ec2.Instance(this, 'FileProcessingInstance', {
       vpc,
       vpcSubnets: {
         subnetType: ec2.SubnetType.PUBLIC,
